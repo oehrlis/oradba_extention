@@ -46,7 +46,7 @@ jobs:
 
       - name: Verify VERSION file
         run: |
-          FILE_VERSION="$(cat VERSION | tr -d '[:space:]')"
+          FILE_VERSION="$(tr -d '[:space:]' < VERSION)"
           if [ "$FILE_VERSION" != "${{ steps.version.outputs.version }}" ]; then
             echo "VERSION file ($FILE_VERSION) does not match release version (${{ steps.version.outputs.version }})"
             exit 1
@@ -65,7 +65,7 @@ jobs:
         id: notes
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          cat > release_notes.md <<EOF
+          cat > release_notes.md <<'NOTES'
 # OraDBA Extension Template v${VERSION}
 
 Reusable OraDBA extension template tarball.
@@ -74,8 +74,8 @@ Reusable OraDBA extension template tarball.
 - ${VERSION} tarball and SHA256 checksum
 
 ## Usage
-Extract the tarball into \${ORADBA_LOCAL_BASE} and adjust metadata/configs as needed.
-EOF
+Extract the tarball into ${ORADBA_LOCAL_BASE} and adjust metadata/configs as needed.
+NOTES
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
