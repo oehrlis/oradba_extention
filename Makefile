@@ -3,7 +3,16 @@ SHELL := /usr/bin/env bash
 DIST ?= dist
 VERSION := $(shell cat VERSION)
 
-.PHONY: lint lint-sh lint-md test build clean
+.PHONY: help lint lint-sh lint-md test build clean
+
+help:
+	@echo "Targets:"; \
+	echo "  lint       Run shellcheck and markdownlint"; \
+	echo "  lint-sh    Run shellcheck on scripts/bin/lib"; \
+	echo "  lint-md    Run markdownlint on markdown files"; \
+	echo "  test       Run BATS tests"; \
+	echo "  build      Build extension tarball into $(DIST)"; \
+	echo "  clean      Remove $(DIST)"
 
 lint: lint-sh lint-md
 
