@@ -1,8 +1,12 @@
 # OraDBA Extension Template
 
-This repository is a ready-to-use OraDBA extension template. Copy/clone it, rename the extension, and start adding your own scripts, SQL, and RMAN content. CI and release workflows are included; the build script only packages the extension payload (bin/sql/rcv/etc/lib + metadata/docs), not the dev helpers.
+This repository is a ready-to-use OraDBA extension template. Copy/clone it,
+rename the extension, and start adding your own scripts, SQL, and RMAN content.
+CI and release workflows are included; the build script only packages the
+extension payload (bin/sql/rcv/etc/lib + metadata/docs), not the dev helpers.
 
 ## Quick Start
+
 - Clone/copy this repo.
 - Rename the extension metadata: `./scripts/rename-extension.sh --name myext --description "My OraDBA add-ons"`
 - Customize `bin/`, `sql/`, `rcv/`, `etc/`, and `lib/` with your logic.
@@ -10,6 +14,7 @@ This repository is a ready-to-use OraDBA extension template. Copy/clone it, rena
 - Tag and push to GitHub to publish via the included release workflow.
 
 ## Structure (repo = extension)
+
 ```text
 .extension                  # Extension metadata (name/version/priority/description)
 README.md                   # Template overview (this file)
@@ -26,20 +31,28 @@ dist/                       # Build outputs (ignored)
 ```
 
 ## Packaging
+
 - `scripts/build.sh` reads `VERSION` and `.extension` to create `dist/<name>-<version>.tar.gz` plus `<tarball>.sha256`.
-- Only extension payload is included by default (`.extension`, README/CHANGELOG/LICENSE/VERSION, bin/sql/rcv/etc/lib). Dev assets (`scripts/`, `tests/`, `.github/`, `dist/`, `.git*`) are excluded.
+- Only extension payload is included by default (`.extension`,
+  README/CHANGELOG/LICENSE/VERSION, bin/sql/rcv/etc/lib). Dev assets
+  (`scripts/`, `tests/`, `.github/`, `dist/`, `.git*`) are excluded.
 - Override output dir with `--dist`. Override version with `--version`.
 
 ## Rename Helper
+
 - `scripts/rename-extension.sh --name <newname> [--description "..."] [--workdir <path>]`
-- Updates `.extension`, README, the sample config filename in `etc/`, and references to the old name (including release notes).
+- Updates `.extension`, README, the sample config filename in `etc/`, and
+  references to the old name (including release notes).
 - Run immediately after cloning to avoid manual edits.
 
 ## CI and Releases
+
 - CI: shellcheck for scripts, markdownlint for docs, BATS tests for helper scripts.
-- Release: on tags `v*.*.*` (or manual dispatch), runs lint/tests, builds tarball + checksum, and publishes them as GitHub release assets.
+- Release: on tags `v*.*.*` (or manual dispatch), runs lint/tests, builds
+  tarball + checksum, and publishes them as GitHub release assets.
 
 ## Using the Template
+
 1. Add your logic to `bin/`, `sql/`, `rcv/`, `etc/`, and `lib/`.
 2. Keep `.extension` metadata current (name, version, priority).
 3. Users copy any needed settings from `etc/<name>.conf.example` into `${ORADBA_PREFIX}/etc/oradba_customer.conf`.
