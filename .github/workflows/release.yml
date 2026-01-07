@@ -66,16 +66,17 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           cat > release_notes.md <<EOF
-# OraDBA Extension Template v${VERSION}
+          # OraDBA Extension Template v${VERSION}
 
-Extension template tarball for OraDBA.
+          Extension template tarball for OraDBA.
 
-## Assets
-- ${VERSION} tarball and SHA256 checksum
+          ## Assets
+          - extension-template-${VERSION}.tar.gz
+          - extension-template-${VERSION}.tar.gz.sha256
 
-## Usage
-Extract the tarball into ${ORADBA_LOCAL_BASE} and adjust metadata/configs as needed.
-EOF
+          ## Usage
+          Extract the tarball into ${ORADBA_LOCAL_BASE} and adjust metadata/configs as needed.
+          EOF
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
