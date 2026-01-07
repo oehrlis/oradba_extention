@@ -12,6 +12,25 @@
   - Common use cases: credentials, caches, temporary files, user-specific configs
   - Included in build tarball for distribution
 
+- **Enhanced SQL Script Examples**: Added comprehensive SQL script templates
+  - `sql/extension_simple.sql` - Basic query example with standard formatting
+  - `sql/extension_comprehensive.sql` - Production-ready script with:
+    * Automatic log directory detection from ORADBA_LOG environment variable
+    * Dynamic spool file naming with timestamp and database SID
+    * Multiple report sections with proper headers
+    * Tablespace usage, session info, top objects, and SQL activity
+    * Error handling with WHENEVER OSERROR
+    * Integration with OraDBA logging infrastructure
+  - Updated `sql/extension_query.sql` with proper header and formatting
+
+- **Enhanced RMAN Script Template**: Comprehensive `rcv/extension_backup.rcv` example
+  - Documents all 17+ template tags supported by oradba_rman.sh
+  - Full backup workflow: database, archivelogs, controlfile, SPFILE
+  - Variable substitution examples: `<BCK_PATH>`, `<START_DATE>`, `<ORACLE_SID>`
+  - Safety features: DELETE/CROSSCHECK commands commented out
+  - Usage examples with multiple invocation patterns
+  - Serves as reference guide for extension developers
+
 ### Changed
 
 - **Build Process**: Updated `scripts/build.sh` to include `.checksumignore` in CONTENT_PATHS
