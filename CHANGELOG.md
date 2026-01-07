@@ -4,7 +4,8 @@
 
 ### Added
 
-- **Checksum Exclusion Support**: Added `.checksumignore` file for customizable integrity checks
+- **Checksum Exclusion Support**: Added `.checksumignore` file for customizable
+  integrity checks
   - Define patterns for files to exclude from checksum verification
   - Supports glob patterns: `*`, `?`, directory matching (`pattern/`)
   - Default exclusions: `.extension`, `.checksumignore`, `log/`
@@ -15,12 +16,12 @@
 - **Enhanced SQL Script Examples**: Added comprehensive SQL script templates
   - `sql/extension_simple.sql` - Basic query example with standard formatting
   - `sql/extension_comprehensive.sql` - Production-ready script with:
-    * Automatic log directory detection from ORADBA_LOG environment variable
-    * Dynamic spool file naming with timestamp and database SID
-    * Multiple report sections with proper headers
-    * Tablespace usage, session info, top objects, and SQL activity
-    * Error handling with WHENEVER OSERROR
-    * Integration with OraDBA logging infrastructure
+    - Automatic log directory detection from ORADBA_LOG environment variable
+    - Dynamic spool file naming with timestamp and database SID
+    - Multiple report sections with proper headers
+    - Tablespace usage, session info, top objects, and SQL activity
+    - Error handling with WHENEVER OSERROR
+    - Integration with OraDBA logging infrastructure
   - Updated `sql/extension_query.sql` with proper header and formatting
 
 - **Enhanced RMAN Script Template**: Comprehensive `rcv/extension_backup.rcv` example
