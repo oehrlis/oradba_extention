@@ -6,12 +6,13 @@ timestamp() {
 }
 
 log() {
-    local level="$1"; shift
+    local level="$1"
+    shift
     printf '[%s] %s %s\n' "$(timestamp)" "$level" "$*"
 }
 
-log_info()  { log "INFO" "$@"; }
-log_warn()  { log "WARN" "$@"; }
+log_info() { log "INFO" "$@"; }
+log_warn() { log "WARN" "$@"; }
 log_error() { log "ERROR" "$@"; }
 
 ensure_oracle_env() {

@@ -16,8 +16,8 @@ if [[ -f "${EXTENSION_ROOT}/lib/common.sh" ]]; then
     # shellcheck source=../lib/common.sh
     source "${EXTENSION_ROOT}/lib/common.sh"
 else
-    log_info()  { printf '[%s] INFO %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
-    log_warn()  { printf '[%s] WARN %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
+    log_info() { printf '[%s] INFO %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
+    log_warn() { printf '[%s] WARN %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
     log_error() { printf '[%s] ERROR %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
     ensure_oracle_env() { [[ -n "${ORACLE_SID:-}" ]]; }
 fi
@@ -27,7 +27,7 @@ EXTENSION_NAME_UPPER="$(echo "$EXTENSION_NAME" | tr '[:lower:]-' '[:upper:]_')"
 EXTENSION_VERSION="${EXTENSION_VERSION:-0.1.0}"
 
 usage() {
-    cat <<EOF
+    cat << EOF
 Usage: $(basename "$0") [--help] [--debug]
 
 Sample OraDBA extension tool. Extend or replace this script with your own logic.
@@ -61,8 +61,14 @@ main() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --help) usage ;;
-        --debug) set -x; shift ;;
-        *) log_error "Unknown option: $1"; usage ;;
+        --debug)
+            set -x
+            shift
+            ;;
+        *)
+            log_error "Unknown option: $1"
+            usage
+            ;;
     esac
 done
 
