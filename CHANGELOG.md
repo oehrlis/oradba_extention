@@ -13,6 +13,11 @@
   - Aligned section headers and structure with oradba/Makefile
   - Maintained extension-specific features: tools, info, status, shortcuts
 
+- **GitHub Actions Workflows**: Updated to use Makefile targets
+  - CI workflow uses `make lint-shell`, `make lint-markdown`, `make test`
+  - Release workflow uses `make ci` for comprehensive checks
+  - Improved consistency and maintainability of workflow definitions
+
 ## [0.3.0] - 2026-01-12
 
 ### Added
