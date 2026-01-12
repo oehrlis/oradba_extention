@@ -98,10 +98,17 @@ ifndef HAS_SHELLCHECK
 	@echo -e "$(YELLOW)Install with: apt-get install shellcheck (Ubuntu) or brew install shellcheck (macOS)$(NC)"
 	@exit 1
 endif
-	@find scripts bin lib tests -name "*.sh" -o -name "*.bats" -type f 2>/dev/null | while read -r file; do \
+	@FAILED=0; \
+	while IFS= read -r -d '' file; do \
 		echo -e "  Checking $$file..."; \
-		shellcheck -e SC1091 "$$file" || exit 1; \
-	done && echo -e "$(GREEN)✓ Shell linting passed$(NC)" || (echo -e "$(RED)✗ Shell linting failed$(NC)" && exit 1)
+		shellcheck -e SC1091 "$$file" || FAILED=1; \
+	done < <(find scripts bin lib tests \( -name "*.sh" -o -name "*.bats" \) -type f -print0 2>/dev/null); \
+	if [ $$FAILED -eq 0 ]; then \
+		echo -e "$(GREEN)✓ Shell linting passed$(NC)"; \
+	else \
+		echo -e "$(RED)✗ Shell linting failed$(NC)"; \
+		exit 1; \
+	fi
 
 .PHONY: lint-md
 lint-md: ## Lint: Run markdownlint on markdown files
@@ -122,10 +129,17 @@ ifndef HAS_SHFMT
 	@echo -e "$(YELLOW)Warning: shfmt not found (optional)$(NC)"
 	@echo -e "$(YELLOW)Install with: go install mvdan.cc/sh/v3/cmd/shfmt@latest$(NC)"
 else
-	@find scripts bin lib -name "*.sh" -type f 2>/dev/null | while read -r file; do \
+	@FAILED=0; \
+	while IFS= read -r -d '' file; do \
 		echo -e "  Formatting $$file..."; \
-		shfmt -i 4 -bn -ci -sr -w "$$file"; \
-	done && echo -e "$(GREEN)✓ Formatting complete$(NC)"
+		shfmt -i 4 -bn -ci -sr -w "$$file" || FAILED=1; \
+	done < <(find scripts bin lib -name "*.sh" -type f -print0 2>/dev/null); \
+	if [ $$FAILED -eq 0 ]; then \
+		echo -e "$(GREEN)✓ Formatting complete$(NC)"; \
+	else \
+		echo -e "$(RED)✗ Formatting failed$(NC)"; \
+		exit 1; \
+	fi
 endif
 
 .PHONY: format-check
@@ -134,14 +148,19 @@ format-check: ## Format: Check if shell scripts are formatted correctly
 ifndef HAS_SHFMT
 	@echo -e "$(YELLOW)Warning: shfmt not found (optional) - skipping format check$(NC)"
 else
-	@UNFORMATTED=$$(find scripts bin lib -name "*.sh" -type f 2>/dev/null | xargs shfmt -i 4 -bn -ci -sr -d 2>/dev/null); \
-	if [ -n "$$UNFORMATTED" ]; then \
-		echo -e "$(RED)✗ The following files are not formatted correctly:$(NC)"; \
-		echo "$$UNFORMATTED"; \
-		echo -e "$(YELLOW)Run 'make format' to fix$(NC)"; \
-		exit 1; \
+	@FILES=$$(find scripts bin lib -name "*.sh" -type f 2>/dev/null); \
+	if [ -z "$$FILES" ]; then \
+		echo -e "$(YELLOW)No shell scripts found to check$(NC)"; \
 	else \
-		echo -e "$(GREEN)✓ All files are properly formatted$(NC)"; \
+		UNFORMATTED=$$(echo "$$FILES" | xargs shfmt -i 4 -bn -ci -sr -d 2>/dev/null); \
+		if [ -n "$$UNFORMATTED" ]; then \
+			echo -e "$(RED)✗ The following files are not formatted correctly:$(NC)"; \
+			echo "$$UNFORMATTED"; \
+			echo -e "$(YELLOW)Run 'make format' to fix$(NC)"; \
+			exit 1; \
+		else \
+			echo -e "$(GREEN)✓ All files are properly formatted$(NC)"; \
+		fi; \
 	fi
 endif
 
