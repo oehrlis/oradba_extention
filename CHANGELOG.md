@@ -7,9 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-01-13
+
+### Added
+
+- **Release Notes Documentation** - Comprehensive release notes for all versions
+  - Added `doc/release_notes/v0.3.0.md` - Comprehensive documentation release
+  - Added `doc/release_notes/v0.3.1.md` - Enhanced release workflow
+  - Detailed documentation of features, changes, and migration guidance
+  - Professional format with usage examples and best practices
+
 ### Changed
 
-- **Makefile Consolidation**: Standardized Makefile with oradba conventions
+- **Release Workflow Enhancement** - Smart release notes generation
+  - Updated `.github/workflows/release.yml` to check for version-specific release notes
+  - Workflow now uses detailed release notes from `doc/release_notes/v{VERSION}.md` if available
+  - Falls back to comprehensive generic notes with proper project branding
+  - Improved documentation links and installation instructions in generated releases
+  - Better user experience with professional release documentation
+
+- **Makefile Consolidation** - Standardized with OraDBA conventions
   - Updated header format with author, license, and reference information
   - Renamed variables to match oradba naming: `COLOR_*`, direct tool detection
   - Renamed targets: `lint-sh` → `lint-shell`, `lint-md` → `lint-markdown`
@@ -18,15 +35,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Aligned section headers and structure with oradba/Makefile
   - Maintained extension-specific features: tools, info, status, shortcuts
 
-- **GitHub Actions Workflows**: Updated to use Makefile targets
+- **GitHub Actions Workflows** - Updated to use standardized Makefile targets
   - CI workflow uses `make lint-shell`, `make lint-markdown`, `make test`
   - Release workflow uses `make ci` for comprehensive checks
   - Improved consistency and maintainability of workflow definitions
 
-- **Extension Distribution**: Added `doc` folder to extension package
+- **Extension Distribution** - Enhanced documentation packaging
   - Updated `.extension` file to include `doc` in provides section
   - Updated `scripts/build.sh` to include `doc` folder in tarball
   - Documentation now distributed with extension template
+  - Release notes included in distribution
 
 ## [0.3.0] - 2026-01-12
 
@@ -143,7 +161,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Test Framework**: Bats tests for quality assurance
 - **Self-Documenting**: Comprehensive README and inline documentation
 
-[Unreleased]: https://github.com/oehrlis/oradba_extension/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/oehrlis/oradba_extension/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/oehrlis/oradba_extension/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/oehrlis/oradba_extension/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/oehrlis/oradba_extension/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/oehrlis/oradba_extension/compare/v0.1.0...v0.1.1

@@ -59,18 +59,51 @@ jobs:
         id: release_notes
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          cat > release_notes.md <<EOF
+          RELEASE_NOTES_FILE="doc/release_notes/v${VERSION}.md"
+          
+          # Check if detailed release notes exist
+          if [ -f "$RELEASE_NOTES_FILE" ]; then
+            echo "Using detailed release notes from $RELEASE_NOTES_FILE"
+            cp "$RELEASE_NOTES_FILE" release_notes.md
+          else
+            echo "Release notes file not found, generating generic notes"
+            cat > release_notes.md <<EOF
           # OraDBA Extension Template v${VERSION}
 
-          Extension template tarball for OraDBA.
+          Extension template for creating OraDBA extensions.
+
+          ## What's Changed
+
+          See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
 
           ## Assets
-          - extension-template-${VERSION}.tar.gz
-          - extension-template-${VERSION}.tar.gz.sha256
+
+          - **extension-template-${VERSION}.tar.gz**: Extension template tarball
+          - **extension-template-${VERSION}.tar.gz.sha256**: Checksum file
+
+          ## Installation
+
+          \`\`\`bash
+          # Extract tarball
+          tar xzf extension-template-${VERSION}.tar.gz
+          cd extension-template
+
+          # Install to OraDBA
+          make install
+          \`\`\`
+
+          ## Documentation
+
+          - [Main Documentation](https://github.com/${{ github.repository }}/blob/main/doc/index.md)
+          - [Installation Guide](https://github.com/${{ github.repository }}/blob/main/doc/installation.md)
+          - [Configuration](https://github.com/${{ github.repository }}/blob/main/doc/configuration.md)
+          - [Development](https://github.com/${{ github.repository }}/blob/main/doc/development.md)
 
           ## Usage
-          Extract the tarball into ${ORADBA_LOCAL_BASE} and adjust metadata/configs as needed.
+
+          Extract the tarball into \\\${ORADBA_LOCAL_BASE} and adjust metadata/configs as needed.
           EOF
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
