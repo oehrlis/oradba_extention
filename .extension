@@ -1,5 +1,5 @@
 name: extension-template
-version: 0.3.0
+version: 0.3.1
 description: Template OraDBA extension with starter scripts and docs
 author: OraDBA Team
 enabled: true
