@@ -104,10 +104,12 @@ Extensions are automatically loaded by `oradba_env_builder.sh` after the Oracle 
 Extensions integrate with PATH based on priority and the "provides" metadata in `.extension`:
 
 ```yaml
+priority: 50              # Load order (lower = earlier, default: 50)
+uses_oradba_libs: false   # Optional: true if extension uses OraDBA common libraries
 provides:
-  bin: true   # Add bin/ to PATH
-  sql: true   # Add sql/ to SQLPATH
-  rcv: true   # Add rcv/ to RMAN search paths
+  bin: true               # Add bin/ to PATH
+  sql: true               # Add sql/ to SQLPATH
+  rcv: true               # Add rcv/ to RMAN search paths
 ```
 
 - **Priority field**: Controls load order (lower number = earlier in PATH)
@@ -121,6 +123,19 @@ Example priorities:
 - 50: Default (loaded after Oracle, most extensions)
 - 60-70: Supplementary utilities (e.g., monitoring scripts)
 - 80-90: Low priority additions
+
+### Uses OraDBA Libraries
+
+The optional `uses_oradba_libs` field indicates if the extension uses OraDBA common libraries:
+
+```yaml
+uses_oradba_libs: true   # Extension sources oradba_common.sh or other OraDBA libs
+```
+
+- **true**: Extension scripts use OraDBA functions (oradba_log, oradba_dedupe_path, etc.)
+- **false**: Extension is standalone (default if not specified)
+- **Purpose**: Documentation and dependency tracking
+- **Example**: Extensions that source `${ORADBA_BASE}/lib/oradba_common.sh`
 
 ### Provides Metadata
 
