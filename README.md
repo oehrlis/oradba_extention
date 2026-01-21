@@ -82,6 +82,70 @@ When OraDBA verifies extension integrity, files matching these patterns are skip
 ## Using the Template
 
 1. Add your logic to `bin/`, `sql/`, `rcv/`, `etc/`, and `lib/`.
-2. Keep `.extension` metadata current (name, version, priority).
+2. Keep `.extension` metadata current (name, version, priority, provides).
 3. Users copy any needed settings from `etc/<name>.conf.example` into `${ORADBA_PREFIX}/etc/oradba_customer.conf`.
 4. Extract the tarball into `${ORADBA_LOCAL_BASE}`; auto-discovery will load the extension.
+
+## How Extensions Load (OraDBA v0.19.0+)
+
+Extensions are automatically loaded by `oradba_env_builder.sh` after the Oracle environment is fully set up:
+
+### Loading Sequence
+
+1. **Oracle Environment**: ORACLE_HOME, ORACLE_SID, and Oracle paths are set first
+2. **Configuration Files**: OraDBA config files are loaded (core → standard → local → customer → SID)
+3. **Extension Discovery**: Extensions in `${ORADBA_LOCAL_BASE}` with `.extension` markers are discovered
+4. **Priority Sorting**: Extensions are sorted by priority field (lower = loaded first, default: 50)
+5. **Extension Loading**: Each enabled extension's directories are added to PATH/SQLPATH based on provides metadata
+6. **Final Deduplication**: All paths are deduplicated using `oradba_dedupe_path()`
+
+### PATH Integration
+
+Extensions integrate with PATH based on priority and the "provides" metadata in `.extension`:
+
+```yaml
+provides:
+  bin: true   # Add bin/ to PATH
+  sql: true   # Add sql/ to SQLPATH
+  rcv: true   # Add rcv/ to RMAN search paths
+```
+
+- **Priority field**: Controls load order (lower number = earlier in PATH)
+- **Default priority**: 50 (loads after Oracle paths)
+- **Higher priority**: Use 10-40 for tools that should override Oracle commands
+- **Lower priority**: Use 60-90 for supplementary tools
+
+Example priorities:
+- 10-20: Critical overrides (e.g., custom sqlplus wrapper)
+- 30-40: Enhanced tooling (e.g., extended DBA scripts)
+- 50: Default (loaded after Oracle, most extensions)
+- 60-70: Supplementary utilities (e.g., monitoring scripts)
+- 80-90: Low priority additions
+
+### Provides Metadata
+
+The `provides` section controls what directories are added:
+
+- `bin: true` - Adds `${EXTENSION_DIR}/bin` to PATH
+- `sql: true` - Adds `${EXTENSION_DIR}/sql` to SQLPATH
+- `rcv: true` - Adds `${EXTENSION_DIR}/rcv` to ORADBA_RCV_PATHS
+- Set to `false` to skip a directory even if it exists
+
+### Environment Variables
+
+Each loaded extension gets:
+- `ORADBA_EXT_<NAME>_PATH="${ext_path}"` - Extension path reference
+- `<NAME>_BASE="${ext_path}"` - Shorthand base variable (e.g., ODB_DATASAFE_BASE)
+- Navigation alias: `cde<name>` - Quick cd to extension directory
+
+### Disabling Extensions
+
+Extensions can be disabled via:
+1. **.extension metadata**: Set `enabled: false`
+2. **Environment variable**: `export ORADBA_EXT_<NAME>_ENABLED=false`
+
+### Backward Compatibility
+
+**Note**: OraDBA v0.19.0+ changed how extensions load. Pre-v0.19.0 extensions may need:
+- Updated `.extension` file with provides section
+- No code changes required if using standard bin/sql/rcv structure
